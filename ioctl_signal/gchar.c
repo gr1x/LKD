@@ -135,7 +135,7 @@ static ssize_t gchar_ioctl(struct file *filp, unsigned int cmd, unsigned long ar
     and kernel space should use SI_KERNEL. But if SI_KERNEL is used the real_time data 
     is not delivered to the user space signal handler function. 
     */
-    info.si_code = SI_QUEUE;
+    info.si_code = POLL_IN;
     /* real time signals may have 32 bits of data. */
     info.si_int = 1234;
 

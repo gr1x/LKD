@@ -7,7 +7,7 @@ endif
 
 PWD	:= $(shell pwd)
 
-obj-m += gchar.o
+obj-m += gchar.o sig_gchar.o
 
 all:
 	make -C $(KDIR)  M=$(PWD) modules
