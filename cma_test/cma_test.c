@@ -43,7 +43,7 @@ static ssize_t cma_test_read(struct file *file, char __user *buf, size_t count, 
 
 	if (alloc)
 	{
-		dma_free_coherent(cma_dev, alloc->size, alloc->virt,
+		dma_free_coherent(NULL, alloc->size, alloc->virt,
 						  alloc->dma);
 
 		_dev_info(cma_dev, "free CM at virtual address: 0x%p dma address: 0x%p size:%luMiB\n",
@@ -76,7 +76,7 @@ static ssize_t cma_test_write(struct file *file, const char __user *buf, size_t 
 	printk("user_copy size in MB: %d\n", alloc->size);
 	alloc->size *= SZ_1M;
 	printk("user_copy size in Byte: %d\n", alloc->size);
-	alloc->virt = dma_alloc_coherent(cma_dev, alloc->size,
+	alloc->virt = dma_alloc_coherent(NULL, alloc->size,
 									 &alloc->dma, GFP_KERNEL);
 	 if (alloc->virt)
 	{

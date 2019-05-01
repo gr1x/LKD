@@ -90,7 +90,7 @@ cma=nn[MG]@[start[MG][-end[MG]]]
 
 ## Debugfs
 
-```
+```bash
 # cd /sys/kernel/debug/cma/cma-reserved
 
 # cat /proc/meminfo | grep Cma
@@ -112,4 +112,68 @@ CmaFree:          630340 kB
 ```
 
 
+
+## Error
+
+**dma_alloc_coherent() failed with improperly initialized dev structure?**
+
+```bash
+echo 8 > /dev/cma_testdmesg -c
+[ 1405.768516] cma_test: loading out-of-tree module taints kernel.
+[ 1405.768696] cma_test: module verification failed: signature and/or required key missing - tainting kernel
+[ 1405.772654] misc cma_test: registered.
+[ 1405.772655] misc cma_test: dma_set_coherent_mask ret: 0
+[ 1405.772655] misc cma_test: System supports 32-bit DMA
+[ 1433.392305] user_copy size in MB: 8
+[ 1433.392308] user_copy size in Byte: 8388608
+[ 1433.392317] misc cma_test: no mem in CMA area for size: 0x800000 Bytes
+```
+
+Simply pass NULL dev in *dma_alloc_coherent()* to bypass, should be a real bus device in real-world driver module.
+
+```bash
+# insmod cma_test.ko 
+# dmesg -c
+[ 2172.055692] misc cma_test: registered.
+[ 2172.055693] misc cma_test: dma_set_coherent_mask ret: 0
+[ 2172.055694] misc cma_test: System supports 32-bit DMA
+
+# cat /proc/meminfo  | grep Cma
+CmaTotal:        1048576 kB
+CmaFree:         1044036 kB
+
+# echo 128 > /dev/cma_test 
+# dmesg -c
+[  100.306201] user_copy size in MB: 128
+[  100.306204] user_copy size in Byte: 134217728
+[  100.306213] cma: cma_alloc(cma 000000005be58dbc, count 32768, align 8)
+[  100.314271] cma: cma_alloc(): returned 000000005439870b
+[  100.339067] misc cma_test: allocate CM at virtual address: 0x00000000ece62c73 address: 0x00000000745cf12e size:128MiB
+
+# cat /proc/meminfo | grep Cma
+CmaTotal:        1048576 kB
+CmaFree:          912964 kB
+
+# echo 512 > /dev/cma_test ; dmesg -c
+[  230.596028] user_copy size in MB: 512
+[  230.596029] user_copy size in Byte: 536870912
+[  230.596032] cma: cma_alloc(cma 000000005be58dbc, count 131072, align 8)
+[  230.605321] cma: cma_alloc(): returned 00000000a7144736
+[  230.727276] misc cma_test: allocate CM at virtual address: 0x000000004cc7dd48 address: 0x0000000003461614 size:512MiB
+
+# cat /proc/meminfo  | grep Cma
+CmaTotal:        1048576 kB
+CmaFree:          388676 kB
+
+# dmesg -c
+# cat /dev/cma_test 
+# dmesg -c
+[  380.081874] cma: cma_release(page 000000005439870b)
+[  380.086066] misc cma_test: free CM at virtual address: 0x00000000ece62c73 dma address: 0x00000000745cf12e size:128MiB
+# cat /dev/cma_test ; dmesg -c
+[  392.369980] cma: cma_release(page 00000000a7144736)
+[  392.375710] misc cma_test: free CM at virtual address: 0x000000004cc7dd48 dma address: 0x0000000003461614 size:512MiB
+```
+
+Wait to be testified with real PCI device ...
 
