@@ -54,18 +54,31 @@ cma=nn[MG]@[start[MG][-end[MG]]]
 
 ## dmesg | grep cma 
 > [    0.000000] Command line: BOOT_IMAGE=/boot/vmlinuz-4.15.0CMA20190430 root=UUID=3865b135-75b9-4465-9640-2d139cb46b38 ro debian-installer/custom-installation=/custom find_preseed=/preseed.cfg auto preseed/file=/floppy/preseed.cfg automatic-ubiquity noprompt priority=critical locale=en_US console-setup/modelcode=evdev cma=1G@1-2G
+
 > [    0.000000] cma: early_cma(1G@1-2G)
+
 > [    0.000000] cma: dma_contiguous_reserve(limit 140000000)
+
 > [    0.000000] cma: dma_contiguous_reserve: reserving 1024 MiB for global area
+
 > [    0.000000] cma: cma_declare_contiguous(size 0x0000000040000000, base 0x0000000000000001, limit 0x0000000080000000 alignment 0x0000000000000000)
+
 > [    0.000000] cma: Reserved 1024 MiB at 0x0000000040000000
+
 > [    0.000000] Kernel command line: BOOT_IMAGE=/boot/vmlinuz-4.15.0CMA20190430 root=UUID=3865b135-75b9-4465-9640-2d139cb46b38 ro debian-installer/custom-installation=/custom find_preseed=/preseed.cfg auto preseed/file=/floppy/preseed.cfg automatic-ubiquity noprompt priority=critical locale=en_US console-setup/modelcode=evdev cma=1G@1-2G
+
 > [    0.000000] Memory: 2404960K/4193716K available (12300K kernel code, 2471K rwdata, 4192K rodata, 2396K init, 2416K bss, 740180K reserved, 1048576K cma-reserved)
+
 > [    5.460514] cma: cma_alloc(cma 0000000087b8192a, count 1, align 0)
+
 > [    5.476537] cma: cma_alloc(): returned 000000004596fdab
+
 > [    5.477712] cma: cma_alloc(cma 0000000087b8192a, count 1, align 0)
+
 > [    5.480302] cma: cma_alloc(): returned 00000000bd6e8859
+
 > [    5.482125] cma: cma_alloc(cma 0000000087b8192a, count 1, align 0)
+
 > [    5.484726] cma: cma_alloc(): returned 0000000003c52ffc
 
 
